@@ -281,12 +281,19 @@ function SlideAlgorithm() {
             </div>
           ))}
         </div>
-        <div style={{ width: "200px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ height: "180px", borderRadius: "2px", overflow: "hidden", border: "1px solid #e8edf4" }}>
-            <img src={DESSERT_IMAGE} alt="Готовый десерт" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ width: "260px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ flex: 1, borderRadius: "2px", overflow: "hidden", border: "1px solid #e8edf4", background: "#000", minHeight: "160px" }}>
+            <iframe
+              src="https://www.youtube.com/embed/XIUJUrp5_x8?rel=0&modestbranding=1"
+              title="Пирожное Картошка"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ width: "100%", height: "100%", border: "none", minHeight: "160px" }}
+            />
           </div>
-          <div style={{ background: "#c9a84c", borderRadius: "2px", padding: "12px 14px", textAlign: "center" }}>
-            <p style={{ color: "#ffffff", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", fontWeight: 500, margin: 0, lineHeight: 1.4 }}>Готовый десерт — результат творческой работы</p>
+          <div style={{ background: "#0f2347", borderRadius: "2px", padding: "8px 12px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <Icon name="Play" size={12} style={{ color: "#c9a84c", flexShrink: 0 }} />
+            <p style={{ color: "#cbd5e1", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", fontWeight: 400, margin: 0, lineHeight: 1.4 }}>Видео: приготовление пирожного «Картошка»</p>
           </div>
         </div>
       </div>
