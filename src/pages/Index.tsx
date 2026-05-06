@@ -303,36 +303,92 @@ function SlideAlgorithm() {
 
 function SlideReflection() {
   const phrases = [
-    "Я узнал, что…", "Было интересно…", "Было трудно…", "Я выполнял задание…",
-    "Я понял, что…", "Теперь я могу…", "Я приобрел…", "Я научился…", "Я смог…", "Я попробую…",
+    { text: "Я узнал, что…", emoji: "💡" },
+    { text: "Было интересно…", emoji: "✨" },
+    { text: "Было трудно…", emoji: "💪" },
+    { text: "Я выполнял задание…", emoji: "📝" },
+    { text: "Я понял, что…", emoji: "🎯" },
+    { text: "Теперь я могу…", emoji: "🚀" },
+    { text: "Я приобрел…", emoji: "🏆" },
+    { text: "Я научился…", emoji: "📚" },
+    { text: "Я смог…", emoji: "⭐" },
+    { text: "Я попробую…", emoji: "🌱" },
   ];
+  const [selected, setSelected] = useState<number[]>([]);
+
+  const toggle = (i: number) => {
+    setSelected(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
-      <SlideHeader title="Рефлексия" subtitle="Обучающиеся высказываются одним предложением, выбирая начало фразы" />
-      <div style={{ flex: 1, display: "flex", gap: "24px", marginTop: "24px" }}>
+      <SlideHeader title="Рефлексия" subtitle="Нажмите на фразу, чтобы выбрать её и высказаться" />
+      <div style={{ flex: 1, display: "flex", gap: "20px", marginTop: "20px" }}>
         <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-          {phrases.map((p, i) => (
-            <div key={i} style={{ display: "flex", gap: "12px", alignItems: "center", padding: "10px 14px", border: "1px solid #e8edf4", borderRadius: "2px" }}>
-              <span style={{ fontFamily: "'Cormorant', serif", fontWeight: 600, fontSize: "20px", color: "#c9a84c", minWidth: "24px" }}>{i + 1}</span>
-              <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: "#3d5278" }}>{p}</span>
-            </div>
-          ))}
+          {phrases.map((p, i) => {
+            const active = selected.includes(i);
+            return (
+              <button
+                key={i}
+                onClick={() => toggle(i)}
+                style={{
+                  display: "flex", gap: "10px", alignItems: "center",
+                  padding: "10px 14px",
+                  border: active ? "2px solid #c9a84c" : "1px solid #e8edf4",
+                  borderRadius: "6px",
+                  background: active ? "linear-gradient(135deg, #fdf5e0 0%, #fef9ec 100%)" : "#fff",
+                  cursor: "pointer",
+                  textAlign: "left",
+                  transition: "all 0.2s ease",
+                  transform: active ? "scale(1.02)" : "scale(1)",
+                  boxShadow: active ? "0 4px 12px rgba(201,168,76,0.2)" : "none",
+                }}
+              >
+                <span style={{ fontSize: "18px", flexShrink: 0, filter: active ? "none" : "grayscale(0.4)" }}>{p.emoji}</span>
+                <span style={{
+                  fontFamily: "'IBM Plex Sans', sans-serif",
+                  fontSize: "12px",
+                  color: active ? "#7a5a10" : "#3d5278",
+                  fontWeight: active ? 600 : 400,
+                  transition: "all 0.2s ease",
+                  flex: 1,
+                }}>{p.text}</span>
+                {active && (
+                  <Icon name="CheckCircle" size={14} style={{ color: "#c9a84c", flexShrink: 0 }} />
+                )}
+              </button>
+            );
+          })}
         </div>
-        <div style={{ width: "200px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div style={{ background: "#0f2347", borderRadius: "2px", padding: "20px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+
+        <div style={{ width: "180px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "16px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div>
-              <p style={{ color: "#c9a84c", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", fontFamily: "'IBM Plex Sans', sans-serif", marginBottom: "12px" }}>Итог мероприятия</p>
+              <p style={{ color: "#c9a84c", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", fontFamily: "'IBM Plex Sans', sans-serif", marginBottom: "10px" }}>Итог</p>
               <p style={{ color: "#cbd5e1", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", lineHeight: 1.7 }}>
-                Каждый обучающийся оценивает свой вклад в достижение поставленных целей, свою активность и эффективность работы группы.
+                Каждый обучающийся оценивает свой вклад, активность и эффективность работы в группе.
               </p>
             </div>
-            <div style={{ marginTop: "20px" }}>
-              <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px" }}>Лазарева М.Г.</p>
-              <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px" }}>Сердюкова О.П.</p>
+
+            <div style={{ marginTop: "12px", padding: "10px", background: "rgba(201,168,76,0.12)", borderRadius: "4px", textAlign: "center" }}>
+              <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "13px", margin: "0 0 4px", fontWeight: 600 }}>
+                {selected.length > 0 ? `${selected.length} из ${phrases.length}` : "0 выбрано"}
+              </p>
+              <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>
+                {selected.length === 0 && "нажмите на фразу"}
+                {selected.length > 0 && selected.length < phrases.length && "фраз выбрано"}
+                {selected.length === phrases.length && "все фразы! 🎉"}
+              </p>
+            </div>
+
+            <div style={{ marginTop: "10px" }}>
+              <p style={{ color: "#475569", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: "0 0 2px" }}>Лазарева М.Г.</p>
+              <p style={{ color: "#475569", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Сердюкова О.П.</p>
             </div>
           </div>
-          <div style={{ border: "1px solid #c9a84c", borderRadius: "2px", padding: "12px", textAlign: "center" }}>
-            <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontStyle: "italic", fontSize: "16px", margin: 0 }}>«Спасибо за участие!»</p>
+
+          <div style={{ border: "1px solid #c9a84c", borderRadius: "6px", padding: "10px", textAlign: "center" }}>
+            <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontStyle: "italic", fontSize: "15px", margin: 0 }}>«Спасибо за участие!»</p>
           </div>
         </div>
       </div>
