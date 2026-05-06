@@ -337,6 +337,7 @@ export default function Index() {
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [direction, setDirection] = useState<"next" | "prev">("next");
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const total = slides.length;
 
   const go = (to: number, dir: "next" | "prev") => {
@@ -349,14 +350,32 @@ export default function Index() {
     }, 260);
   };
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
+  };
+
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => document.removeEventListener("fullscreenchange", onFsChange);
+  }, []);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === "ArrowDown") go(current + 1, "next");
       if (e.key === "ArrowLeft" || e.key === "ArrowUp") go(current - 1, "prev");
+      if (e.key === "f" || e.key === "F5") { e.preventDefault(); toggleFullscreen(); }
+      if (e.key === "Escape" && isFullscreen) setIsFullscreen(false);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [current, animating]);
+  }, [current, animating, isFullscreen]);
 
   const renderSlide = () => {
     switch (current) {
@@ -374,17 +393,26 @@ export default function Index() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#d1d8e3", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", fontFamily: "'IBM Plex Sans', sans-serif" }}>
-      <div style={{ width: "100%", maxWidth: "960px" }}>
+    <div style={{ minHeight: "100vh", background: isFullscreen ? "#000" : "#d1d8e3", display: "flex", alignItems: "center", justifyContent: "center", padding: isFullscreen ? "0" : "16px", fontFamily: "'IBM Plex Sans', sans-serif" }}>
+      <div style={{ width: "100%", maxWidth: isFullscreen ? "100vw" : "960px" }}>
         {/* Slide */}
         <div style={{ position: "relative", background: "#fff", borderRadius: "3px", boxShadow: "0 20px 60px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.12)", overflow: "hidden", aspectRatio: "16/9" }}>
           {/* Progress */}
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "#e8edf4", zIndex: 20 }}>
             <div style={{ height: "100%", background: "#c9a84c", width: `${((current + 1) / total) * 100}%`, transition: "width 0.4s ease" }} />
           </div>
-          {/* Slide number */}
-          <div style={{ position: "absolute", top: "10px", right: "14px", zIndex: 20, fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#c5d0de" }}>
-            <span style={{ color: "#6b82a0", fontWeight: 500 }}>{current + 1}</span>/<span>{total}</span>
+          {/* Slide number + fullscreen */}
+          <div style={{ position: "absolute", top: "10px", right: "14px", zIndex: 20, display: "flex", alignItems: "center", gap: "10px" }}>
+            <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#c5d0de" }}>
+              <span style={{ color: "#6b82a0", fontWeight: 500 }}>{current + 1}</span>/<span>{total}</span>
+            </span>
+            <button
+              onClick={toggleFullscreen}
+              title={isFullscreen ? "Выйти из полного экрана (Esc)" : "Полный экран (F)"}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "26px", height: "26px", background: "rgba(0,0,0,0.06)", border: "none", borderRadius: "4px", cursor: "pointer", color: "#6b82a0" }}
+            >
+              <Icon name={isFullscreen ? "Minimize2" : "Maximize2"} size={13} />
+            </button>
           </div>
           {/* Content */}
           <div style={{
@@ -437,9 +465,11 @@ export default function Index() {
           </button>
         </div>
 
-        <p style={{ textAlign: "center", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#9aaabe", marginTop: "8px" }}>
-          Управление: кнопки или стрелки клавиатуры
-        </p>
+        {!isFullscreen && (
+          <p style={{ textAlign: "center", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#9aaabe", marginTop: "8px" }}>
+            Управление: стрелки клавиатуры · <kbd style={{ background: "#e8edf4", padding: "1px 5px", borderRadius: "3px", fontSize: "10px" }}>F</kbd> — полный экран
+          </p>
+        )}
       </div>
     </div>
   );
