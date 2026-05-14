@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { SlideTitle, SlideContents, SlideIntro, SlideGoals, SlidePlan, SlideTechnique } from "@/components/slides/ContentSlides";
-import { SlidePractice, SlideAlgorithm, SlideReflection } from "@/components/slides/PracticeSlides";
+import { SlidePractice, SlideAlgorithm, SlideReflection, SlideQuiz } from "@/components/slides/PracticeSlides";
 
 const slides = [
   { id: 0 }, { id: 1 }, { id: 2 }, { id: 3 },
-  { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 },
+  { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 },
 ];
 
 export default function Index() {
@@ -62,7 +62,8 @@ export default function Index() {
       case 5: return <SlideTechnique />;
       case 6: return <SlidePractice />;
       case 7: return <SlideAlgorithm />;
-      case 8: return <SlideReflection />;
+      case 8: return <SlideQuiz />;
+      case 9: return <SlideReflection />;
       default: return null;
     }
   };

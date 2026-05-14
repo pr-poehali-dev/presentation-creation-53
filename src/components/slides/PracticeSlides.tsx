@@ -4,6 +4,112 @@ import SlideHeader from "@/components/SlideHeader";
 
 const DESSERT_IMAGE = "https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/7c8ec60f-507c-4bbe-a026-a9aaa6698330.jpg";
 
+export function SlideQuiz() {
+  const questions = [
+    {
+      q: "Что такое техника Revisée в кондитерском деле?",
+      options: ["Способ выпечки при низкой температуре", "Французская техника современного оформления десертов", "Метод темперирования шоколада", "Рецептура пирожного «Картошка»"],
+      correct: 1,
+    },
+    {
+      q: "Какой профессиональный модуль охватывает приготовление десертов?",
+      options: ["ПМ 01", "ПМ 06", "ПМ 04", "ПМ 09"],
+      correct: 2,
+    },
+    {
+      q: "Первый шаг алгоритма приготовления пирожного «Картошка»?",
+      options: ["Раскатать тесто", "Взбить сливки", "Подготовить рабочее место и инвентарь", "Растопить шоколад"],
+      correct: 2,
+    },
+  ];
+
+  const [answers, setAnswers] = useState<(number | null)[]>(Array(questions.length).fill(null));
+  const [submitted, setSubmitted] = useState(false);
+
+  const pick = (qi: number, oi: number) => {
+    if (submitted) return;
+    setAnswers(prev => { const a = [...prev]; a[qi] = oi; return a; });
+  };
+
+  const answered = answers.filter(a => a !== null).length;
+  const correct = submitted ? answers.filter((a, i) => a === questions[i].correct).length : 0;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
+      <SlideHeader title="Проверь себя" subtitle="Выбери правильный ответ на каждый вопрос" />
+      <div style={{ flex: 1, display: "flex", gap: "20px", marginTop: "18px" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "14px" }}>
+          {questions.map((q, qi) => (
+            <div key={qi}>
+              <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", fontWeight: 600, color: "#1e2d4d", margin: "0 0 8px" }}>
+                <span style={{ color: "#c9a84c", marginRight: "6px" }}>{qi + 1}.</span>{q.q}
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px" }}>
+                {q.options.map((opt, oi) => {
+                  const picked = answers[qi] === oi;
+                  const isCorrect = oi === q.correct;
+                  let bg = picked ? "linear-gradient(135deg,#fdf5e0,#fef9ec)" : "#f7f9fc";
+                  let border = picked ? "2px solid #c9a84c" : "1px solid #e8edf4";
+                  let color = picked ? "#7a5a10" : "#3d5278";
+                  if (submitted && picked && !isCorrect) { bg = "#fff0f0"; border = "2px solid #e05a5a"; color = "#a83232"; }
+                  if (submitted && isCorrect) { bg = "#f0faf4"; border = "2px solid #4caf80"; color = "#1a6641"; }
+                  return (
+                    <button key={oi} onClick={() => pick(qi, oi)} style={{
+                      display: "flex", alignItems: "center", gap: "8px", padding: "7px 10px",
+                      border, borderRadius: "5px", background: bg, cursor: submitted ? "default" : "pointer",
+                      textAlign: "left", transition: "all 0.18s ease",
+                    }}>
+                      <span style={{ width: "18px", height: "18px", borderRadius: "50%", border: `1.5px solid ${picked ? "#c9a84c" : "#c5d0de"}`, background: picked ? "#c9a84c" : "transparent", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        {submitted && isCorrect && <Icon name="Check" size={10} style={{ color: "#fff" }} />}
+                        {submitted && picked && !isCorrect && <Icon name="X" size={10} style={{ color: "#fff" }} />}
+                      </span>
+                      <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color, lineHeight: 1.3 }}>{opt}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ width: "160px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "16px", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "12px" }}>
+            {!submitted ? (
+              <>
+                <div style={{ textAlign: "center" }}>
+                  <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "36px", fontWeight: 700, margin: 0 }}>{answered}</p>
+                  <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>из {questions.length} ответов</p>
+                </div>
+                <button
+                  onClick={() => answered === questions.length && setSubmitted(true)}
+                  style={{
+                    width: "100%", padding: "10px", borderRadius: "5px", border: "none",
+                    background: answered === questions.length ? "#c9a84c" : "rgba(201,168,76,0.2)",
+                    color: answered === questions.length ? "#0f1f3d" : "#64748b",
+                    fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", fontWeight: 600,
+                    cursor: answered === questions.length ? "pointer" : "not-allowed",
+                    transition: "all 0.2s",
+                  }}
+                >Проверить</button>
+              </>
+            ) : (
+              <>
+                <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "42px", fontWeight: 700, margin: 0 }}>{correct}/{questions.length}</p>
+                <p style={{ color: correct === questions.length ? "#4caf80" : correct >= 2 ? "#c9a84c" : "#e05a5a", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", textAlign: "center", margin: 0 }}>
+                  {correct === questions.length ? "Отлично! 🎉" : correct >= 2 ? "Хорошо! 👍" : "Попробуй ещё раз"}
+                </p>
+                <button onClick={() => { setAnswers(Array(questions.length).fill(null)); setSubmitted(false); }} style={{ width: "100%", padding: "8px", borderRadius: "5px", border: "1px solid #c9a84c", background: "transparent", color: "#c9a84c", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", cursor: "pointer" }}>
+                  Повторить
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function SlidePractice() {
   const themes = [
     { emoji: "🌸", title: "8 марта", desc: "Весенние мотивы, нежные цвета, цветочные элементы" },
@@ -101,16 +207,29 @@ export function SlideReflection() {
     { text: "Я попробую…", emoji: "🌱" },
   ];
   const [selected, setSelected] = useState<number[]>([]);
+  const [activePhrase, setActivePhrase] = useState<number | null>(null);
+  const [texts, setTexts] = useState<Record<number, string>>({});
+  const [stars, setStars] = useState(0);
+  const [hoverStar, setHoverStar] = useState(0);
 
   const toggle = (i: number) => {
-    setSelected(prev => prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]);
+    if (selected.includes(i)) {
+      setSelected(prev => prev.filter(x => x !== i));
+      if (activePhrase === i) setActivePhrase(null);
+    } else {
+      setSelected(prev => [...prev, i]);
+      setActivePhrase(i);
+    }
   };
 
+  const starLabels = ["Плохо", "Удовлетворительно", "Хорошо", "Отлично", "Превосходно"];
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
-      <SlideHeader title="Рефлексия" subtitle="Нажмите на фразу, чтобы выбрать её и высказаться" />
-      <div style={{ flex: 1, display: "flex", gap: "20px", marginTop: "20px" }}>
-        <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "32px 50px", background: "#fff" }}>
+      <SlideHeader title="Рефлексия" subtitle="Выберите фразу и допишите свою мысль" />
+      <div style={{ flex: 1, display: "flex", gap: "18px", marginTop: "16px" }}>
+        {/* Phrases grid */}
+        <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7px", alignContent: "start" }}>
           {phrases.map((p, i) => {
             const active = selected.includes(i);
             return (
@@ -118,74 +237,84 @@ export function SlideReflection() {
                 key={i}
                 onClick={() => toggle(i)}
                 style={{
-                  display: "flex", gap: "10px", alignItems: "center",
-                  padding: "10px 14px",
+                  display: "flex", gap: "8px", alignItems: "center",
+                  padding: "8px 12px",
                   border: active ? "2px solid #c9a84c" : "1px solid #e8edf4",
                   borderRadius: "6px",
-                  background: active ? "linear-gradient(135deg, #fdf5e0 0%, #fef9ec 100%)" : "#fff",
-                  cursor: "pointer",
-                  textAlign: "left",
+                  background: active ? "linear-gradient(135deg, #fdf5e0, #fef9ec)" : "#fff",
+                  cursor: "pointer", textAlign: "left",
                   transition: "all 0.2s ease",
                   transform: active ? "scale(1.02)" : "scale(1)",
-                  boxShadow: active ? "0 4px 12px rgba(201,168,76,0.2)" : "none",
+                  boxShadow: active ? "0 3px 10px rgba(201,168,76,0.18)" : "none",
                 }}
               >
-                <span style={{ fontSize: "18px", flexShrink: 0, filter: active ? "none" : "grayscale(0.4)" }}>{p.emoji}</span>
-                <span style={{
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontSize: "12px",
-                  color: active ? "#7a5a10" : "#3d5278",
-                  fontWeight: active ? 600 : 400,
-                  transition: "all 0.2s ease",
-                  flex: 1,
-                }}>{p.text}</span>
-                {active && (
-                  <Icon name="CheckCircle" size={14} style={{ color: "#c9a84c", flexShrink: 0 }} />
-                )}
+                <span style={{ fontSize: "16px", flexShrink: 0 }}>{p.emoji}</span>
+                <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: active ? "#7a5a10" : "#3d5278", fontWeight: active ? 600 : 400, flex: 1 }}>{p.text}</span>
+                {active && <Icon name="CheckCircle" size={13} style={{ color: "#c9a84c", flexShrink: 0 }} />}
               </button>
             );
           })}
         </div>
 
-        <div style={{ width: "180px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
-          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "16px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <div>
-              <p style={{ color: "#c9a84c", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", fontFamily: "'IBM Plex Sans', sans-serif", marginBottom: "10px" }}>Итог</p>
-              <p style={{ color: "#cbd5e1", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", lineHeight: 1.7 }}>
-                Каждый обучающийся оценивает свой вклад, активность и эффективность работы в группе.
-              </p>
-            </div>
-            <div style={{ marginTop: "12px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "6px" }}>
-                <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Активность</p>
-                <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "18px", fontWeight: 700, margin: 0 }}>
-                  {Math.round((selected.length / phrases.length) * 100)}%
-                </p>
-              </div>
-              <div style={{ height: "6px", background: "rgba(255,255,255,0.08)", borderRadius: "3px", overflow: "hidden" }}>
-                <div style={{
-                  height: "100%",
-                  width: `${(selected.length / phrases.length) * 100}%`,
-                  background: selected.length === phrases.length
-                    ? "linear-gradient(90deg, #c9a84c, #f0c060)"
-                    : "#c9a84c",
-                  borderRadius: "3px",
-                  transition: "width 0.4s ease",
-                }} />
-              </div>
-              <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: "6px 0 0", textAlign: "center" }}>
-                {selected.length === 0 && "нажмите на фразу"}
-                {selected.length > 0 && selected.length < phrases.length && `${selected.length} из ${phrases.length} фраз`}
-                {selected.length === phrases.length && "все фразы! 🎉"}
-              </p>
-            </div>
-            <div style={{ marginTop: "10px" }}>
-              <p style={{ color: "#475569", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: "0 0 2px" }}>Лазарева М.Г.</p>
-              <p style={{ color: "#475569", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Сердюкова О.П.</p>
-            </div>
+        {/* Right panel */}
+        <div style={{ width: "210px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
+
+          {/* Text input */}
+          <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "6px", padding: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.15em", margin: 0 }}>
+              {activePhrase !== null ? phrases[activePhrase].text : "Выберите фразу слева"}
+            </p>
+            <textarea
+              placeholder={activePhrase !== null ? "Напишите свою мысль…" : ""}
+              value={activePhrase !== null ? (texts[activePhrase] || "") : ""}
+              onChange={e => activePhrase !== null && setTexts(prev => ({ ...prev, [activePhrase]: e.target.value }))}
+              disabled={activePhrase === null}
+              style={{
+                width: "100%", minHeight: "60px", resize: "none",
+                fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#1e2d4d",
+                border: "1px solid #e8edf4", borderRadius: "4px", padding: "8px",
+                background: activePhrase !== null ? "#fff" : "#f0f3f8",
+                outline: "none", lineHeight: 1.5, boxSizing: "border-box",
+              }}
+            />
           </div>
-          <div style={{ border: "1px solid #c9a84c", borderRadius: "6px", padding: "10px", textAlign: "center" }}>
-            <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontStyle: "italic", fontSize: "15px", margin: 0 }}>«Спасибо за участие!»</p>
+
+          {/* Stars rating */}
+          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "14px", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+            <p style={{ color: "#c9a84c", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", fontFamily: "'IBM Plex Sans', sans-serif", margin: 0 }}>Оцените урок</p>
+            <div style={{ display: "flex", gap: "4px" }}>
+              {[1, 2, 3, 4, 5].map(s => (
+                <button key={s} onClick={() => setStars(s)} onMouseEnter={() => setHoverStar(s)} onMouseLeave={() => setHoverStar(0)}
+                  style={{ background: "none", border: "none", cursor: "pointer", padding: "2px", fontSize: "20px", transition: "transform 0.15s", transform: (hoverStar || stars) >= s ? "scale(1.2)" : "scale(1)" }}>
+                  <span style={{ color: (hoverStar || stars) >= s ? "#f0c060" : "#2d4060" }}>★</span>
+                </button>
+              ))}
+            </div>
+            {stars > 0 && (
+              <p style={{ color: "#c9a84c", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>{starLabels[stars - 1]}</p>
+            )}
+          </div>
+
+          {/* Progress */}
+          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "12px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "6px" }}>
+              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Активность</p>
+              <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "18px", fontWeight: 700, margin: 0 }}>
+                {Math.round((selected.length / phrases.length) * 100)}%
+              </p>
+            </div>
+            <div style={{ height: "5px", background: "rgba(255,255,255,0.08)", borderRadius: "3px", overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${(selected.length / phrases.length) * 100}%`, background: selected.length === phrases.length ? "linear-gradient(90deg,#c9a84c,#f0c060)" : "#c9a84c", borderRadius: "3px", transition: "width 0.4s ease" }} />
+            </div>
+            <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: "6px 0 0", textAlign: "center" }}>
+              {selected.length === 0 && "нажмите на фразу"}
+              {selected.length > 0 && selected.length < phrases.length && `${selected.length} из ${phrases.length} фраз`}
+              {selected.length === phrases.length && "все фразы! 🎉"}
+            </p>
+          </div>
+
+          <div style={{ border: "1px solid #c9a84c", borderRadius: "6px", padding: "8px", textAlign: "center" }}>
+            <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontStyle: "italic", fontSize: "14px", margin: 0 }}>«Спасибо за участие!»</p>
           </div>
         </div>
       </div>
