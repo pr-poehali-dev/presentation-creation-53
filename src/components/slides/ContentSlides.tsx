@@ -29,7 +29,7 @@ export function SlideTitle() {
 export function SlideContents() {
   const items = [
     "Пояснительная записка", "Цели и задачи мероприятия", "План мероприятия",
-    "Техника Revisée", "Практическая часть", "Алгоритм приготовления десерта", "Рефлексия",
+    "Техника Revisée", "Практическая часть", "Алгоритм приготовления десерта", "Проверь себя", "Рефлексия",
   ];
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
