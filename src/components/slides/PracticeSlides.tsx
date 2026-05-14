@@ -155,13 +155,27 @@ export function SlideReflection() {
                 Каждый обучающийся оценивает свой вклад, активность и эффективность работы в группе.
               </p>
             </div>
-            <div style={{ marginTop: "12px", padding: "10px", background: "rgba(201,168,76,0.12)", borderRadius: "4px", textAlign: "center" }}>
-              <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "13px", margin: "0 0 4px", fontWeight: 600 }}>
-                {selected.length > 0 ? `${selected.length} из ${phrases.length}` : "0 выбрано"}
-              </p>
-              <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>
+            <div style={{ marginTop: "12px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "6px" }}>
+                <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Активность</p>
+                <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "18px", fontWeight: 700, margin: 0 }}>
+                  {Math.round((selected.length / phrases.length) * 100)}%
+                </p>
+              </div>
+              <div style={{ height: "6px", background: "rgba(255,255,255,0.08)", borderRadius: "3px", overflow: "hidden" }}>
+                <div style={{
+                  height: "100%",
+                  width: `${(selected.length / phrases.length) * 100}%`,
+                  background: selected.length === phrases.length
+                    ? "linear-gradient(90deg, #c9a84c, #f0c060)"
+                    : "#c9a84c",
+                  borderRadius: "3px",
+                  transition: "width 0.4s ease",
+                }} />
+              </div>
+              <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: "6px 0 0", textAlign: "center" }}>
                 {selected.length === 0 && "нажмите на фразу"}
-                {selected.length > 0 && selected.length < phrases.length && "фраз выбрано"}
+                {selected.length > 0 && selected.length < phrases.length && `${selected.length} из ${phrases.length} фраз`}
                 {selected.length === phrases.length && "все фразы! 🎉"}
               </p>
             </div>
