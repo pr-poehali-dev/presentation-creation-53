@@ -225,6 +225,73 @@ export function SlideTechnique() {
   );
 }
 
+export function SlideDirections() {
+  const directions = [
+    {
+      title: "Деконструкция",
+      items: [
+        "Тирамису → эспрессо-икра + пена маскарпоне + бисквитная крошка",
+        "Чизкейк → мусс + карамелизованная основа + ягодный гель",
+      ],
+    },
+    {
+      title: "Смена текстуры",
+      items: [
+        "Молекулярная гастрономия",
+        "Шоколадный торт → эспума + хрустящий диск",
+      ],
+    },
+    {
+      title: "Форма и порция",
+      items: [
+        "Торт → мини-версии в стаканчиках",
+        "Эклер → ролл; Наполеон → мини-тарталетки",
+      ],
+    },
+    {
+      title: "Вкусовой профиль",
+      items: [
+        "Контрастные ноты: соль к карамели, перец к шоколаду",
+        "Сезонность и тренды: веган, безглютеновый, низкосахарный",
+      ],
+    },
+    {
+      title: "Технологии",
+      items: [
+        "Су-вид, шоковая заморозка, 3D-печать декора",
+        "Сферификация и желирование",
+      ],
+    },
+    {
+      title: "Интерактивная подача",
+      items: [
+        "Компоненты отдельно — гость собирает сам",
+        "Сухой лёд, горячий соус, «живые» элементы",
+      ],
+    },
+  ];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
+      <SlideHeader title="Ключевые направления пересмотра" />
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gridTemplateRows: "1fr 1fr", gap: "10px", marginTop: "20px" }}>
+        {directions.map((dir, i) => (
+          <div key={i} style={{ border: "1px solid #e8edf4", borderRadius: "2px", padding: "14px 16px", display: "flex", flexDirection: "column", gap: "8px", borderTop: "3px solid #c9a84c" }}>
+            <p style={{ fontFamily: "'Cormorant', serif", fontWeight: 600, fontSize: "16px", color: "#0f1f3d", margin: 0 }}>{dir.title}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {dir.items.map((item, j) => (
+                <div key={j} style={{ display: "flex", gap: "7px", alignItems: "flex-start" }}>
+                  <span style={{ color: "#c9a84c", flexShrink: 0, fontSize: "10px", marginTop: "3px" }}>▸</span>
+                  <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10.5px", color: "#4a607f", lineHeight: 1.45 }}>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function SlideApproach() {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
