@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import { SlideTitle, SlideContents, SlideIntro, SlideGoals, SlidePlan, SlideTechnique } from "@/components/slides/ContentSlides";
 import { SlidePractice, SlideAlgorithm, SlideReflection, SlideQuiz } from "@/components/slides/PracticeSlides";
+import { ContentsContext } from "@/components/SlideHeader";
 
 const slides = [
   { id: 0 }, { id: 1 }, { id: 2 }, { id: 3 },
@@ -91,14 +92,16 @@ export default function Index() {
             </button>
           </div>
           {/* Content */}
-          <div style={{
-            position: "absolute", inset: 0,
-            opacity: animating ? 0 : 1,
-            transform: animating ? (direction === "next" ? "translateX(18px)" : "translateX(-18px)") : "translateX(0)",
-            transition: "opacity 0.26s ease, transform 0.26s ease"
-          }}>
-            {renderSlide()}
-          </div>
+          <ContentsContext.Provider value={current !== 1 ? () => go(1, "prev") : null}>
+            <div style={{
+              position: "absolute", inset: 0,
+              opacity: animating ? 0 : 1,
+              transform: animating ? (direction === "next" ? "translateX(18px)" : "translateX(-18px)") : "translateX(0)",
+              transition: "opacity 0.26s ease, transform 0.26s ease"
+            }}>
+              {renderSlide()}
+            </div>
+          </ContentsContext.Provider>
         </div>
 
         {/* Controls */}
