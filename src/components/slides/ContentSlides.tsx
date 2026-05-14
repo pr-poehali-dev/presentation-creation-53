@@ -34,12 +34,7 @@ export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
     { label: "План мероприятия", slide: 4 },
     { label: "Техника Revisée", slide: 5 },
     { label: "Суть подхода", slide: 6 },
-    { label: "Направления: Деконструкция", slide: 7 },
-    { label: "Направления: Смена текстуры", slide: 8 },
-    { label: "Направления: Форма и порция", slide: 9 },
-    { label: "Направления: Вкусовой профиль", slide: 10 },
-    { label: "Направления: Технологии", slide: 11 },
-    { label: "Направления: Интерактивная подача", slide: 12 },
+    { label: "Ключевые направления пересмотра", slide: 7, sub: "6 направлений" },
     { label: "Практическая часть", slide: 13 },
     { label: "Алгоритм приготовления десерта", slide: 14 },
     { label: "Проверь себя", slide: 15 },
@@ -49,7 +44,7 @@ export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
       <SlideHeader title="Содержание" subtitle="Нажмите на раздел, чтобы перейти к нему" />
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "7px", marginTop: "14px" }}>
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginTop: "20px" }}>
         {items.map((item, i) => {
           const active = hovered === i;
           return (
@@ -73,8 +68,13 @@ export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
               <span style={{ fontFamily: "'Cormorant', serif", fontSize: "22px", fontWeight: 300, color: "#c9a84c", opacity: active ? 1 : 0.6, minWidth: "30px", transition: "opacity 0.18s" }}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: active ? "#7a5a10" : "#1e2d4d", fontWeight: active ? 600 : 500, lineHeight: 1.3, flex: 1, transition: "color 0.18s" }}>
-                {item.label}
+              <span style={{ flex: 1 }}>
+                <span style={{ display: "block", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: active ? "#7a5a10" : "#1e2d4d", fontWeight: active ? 600 : 500, lineHeight: 1.3, transition: "color 0.18s" }}>
+                  {item.label}
+                </span>
+                {"sub" in item && item.sub && (
+                  <span style={{ display: "block", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#c9a84c", marginTop: "2px" }}>{item.sub}</span>
+                )}
               </span>
               {active && <span style={{ color: "#c9a84c", fontSize: "16px" }}>→</span>}
             </button>
