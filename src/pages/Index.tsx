@@ -55,7 +55,7 @@ export default function Index() {
   const renderSlide = () => {
     switch (current) {
       case 0: return <SlideTitle />;
-      case 1: return <SlideContents />;
+      case 1: return <SlideContents onGo={(i) => go(i, i > current ? "next" : "prev")} />;
       case 2: return <SlideIntro />;
       case 3: return <SlideGoals />;
       case 4: return <SlidePlan />;

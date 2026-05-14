@@ -1,3 +1,4 @@
+import { useState } from "react";
 import SlideHeader from "@/components/SlideHeader";
 
 const DESSERT_IMAGE = "https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/7c8ec60f-507c-4bbe-a026-a9aaa6698330.jpg";
@@ -26,21 +27,52 @@ export function SlideTitle() {
   );
 }
 
-export function SlideContents() {
+export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
   const items = [
-    "Пояснительная записка", "Цели и задачи мероприятия", "План мероприятия",
-    "Техника Revisée", "Практическая часть", "Алгоритм приготовления десерта", "Проверь себя", "Рефлексия",
+    { label: "Пояснительная записка", slide: 2 },
+    { label: "Цели и задачи мероприятия", slide: 3 },
+    { label: "План мероприятия", slide: 4 },
+    { label: "Техника Revisée", slide: 5 },
+    { label: "Практическая часть", slide: 6 },
+    { label: "Алгоритм приготовления десерта", slide: 7 },
+    { label: "Проверь себя", slide: 8 },
+    { label: "Рефлексия", slide: 9 },
   ];
+  const [hovered, setHovered] = useState<number | null>(null);
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
-      <SlideHeader title="Содержание" />
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginTop: "24px" }}>
-        {items.map((item, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: "16px", padding: "14px 16px", border: "1px solid #e8edf4", borderRadius: "2px" }}>
-            <span style={{ fontFamily: "'Cormorant', serif", fontSize: "28px", fontWeight: 300, color: "#c9a84c", opacity: 0.7, minWidth: "36px" }}>{String(i + 1).padStart(2, "0")}</span>
-            <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: "#1e2d4d", fontWeight: 500, lineHeight: 1.3 }}>{item}</span>
-          </div>
-        ))}
+      <SlideHeader title="Содержание" subtitle="Нажмите на раздел, чтобы перейти к нему" />
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginTop: "20px" }}>
+        {items.map((item, i) => {
+          const active = hovered === i;
+          return (
+            <button
+              key={i}
+              onClick={() => onGo?.(item.slide)}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              style={{
+                display: "flex", alignItems: "center", gap: "16px",
+                padding: "14px 16px",
+                border: active ? "1.5px solid #c9a84c" : "1px solid #e8edf4",
+                borderRadius: "4px",
+                background: active ? "linear-gradient(135deg,#fdf5e0,#fef9ec)" : "#fff",
+                cursor: "pointer", textAlign: "left",
+                transition: "all 0.18s ease",
+                boxShadow: active ? "0 4px 14px rgba(201,168,76,0.15)" : "none",
+                transform: active ? "translateY(-1px)" : "none",
+              }}
+            >
+              <span style={{ fontFamily: "'Cormorant', serif", fontSize: "28px", fontWeight: 300, color: active ? "#c9a84c" : "#c9a84c", opacity: active ? 1 : 0.6, minWidth: "36px", transition: "opacity 0.18s" }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: active ? "#7a5a10" : "#1e2d4d", fontWeight: active ? 600 : 500, lineHeight: 1.3, flex: 1, transition: "color 0.18s" }}>
+                {item.label}
+              </span>
+              {active && <span style={{ color: "#c9a84c", fontSize: "16px" }}>→</span>}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
