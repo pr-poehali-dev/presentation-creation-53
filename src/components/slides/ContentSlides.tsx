@@ -224,3 +224,26 @@ export function SlideTechnique() {
     </div>
   );
 }
+
+export function SlideApproach() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
+      <SlideHeader title="Суть подхода" />
+      <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", marginTop: "24px" }}>
+        <div style={{ maxWidth: "680px", display: "flex", flexDirection: "column", gap: "28px" }}>
+          <div style={{ borderLeft: "4px solid #c9a84c", paddingLeft: "28px" }}>
+            <p style={{ fontFamily: "'Cormorant', serif", fontSize: "22px", fontWeight: 400, color: "#0f1f3d", lineHeight: 1.5, margin: 0 }}>
+              Пересмотр десерта — это не просто косметическое изменение, а глубокая трансформация: сохранение узнаваемого вкуса при радикальном обновлении формы, текстуры или способа подачи.
+            </p>
+          </div>
+          <div style={{ background: "#0f2347", borderRadius: "2px", padding: "24px 32px", display: "flex", alignItems: "center", gap: "20px" }}>
+            <span style={{ color: "#c9a84c", fontSize: "28px", flexShrink: 0 }}>◈</span>
+            <p style={{ fontFamily: "'Cormorant', serif", fontSize: "20px", fontWeight: 300, fontStyle: "italic", color: "#fff", lineHeight: 1.5, margin: 0 }}>
+              Цель — удивить гостя, сохранив «ноту ностальгии»
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
