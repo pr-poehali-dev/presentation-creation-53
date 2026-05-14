@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
-import { SlideTitle, SlideContents, SlideIntro, SlideGoals, SlidePlan, SlideTechnique, SlideDirections, SlideApproach } from "@/components/slides/ContentSlides";
+import { SlideTitle, SlideContents, SlideIntro, SlideGoals, SlidePlan, SlideTechnique, SlideApproach, SlideDir1, SlideDir2, SlideDir3, SlideDir4, SlideDir5, SlideDir6 } from "@/components/slides/ContentSlides";
 import { SlidePractice, SlideAlgorithm, SlideReflection, SlideQuiz } from "@/components/slides/PracticeSlides";
 import { ContentsContext } from "@/components/SlideHeader";
 
 const slides = [
-  { id: 0 }, { id: 1 }, { id: 2 }, { id: 3 },
-  { id: 4 }, { id: 5 }, { id: 6 }, { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 },
+  { id: 0 }, { id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 },
+  { id: 7 }, { id: 8 }, { id: 9 }, { id: 10 }, { id: 11 }, { id: 12 },
+  { id: 13 }, { id: 14 }, { id: 15 }, { id: 16 },
 ];
 
 export default function Index() {
@@ -62,11 +63,16 @@ export default function Index() {
       case 4: return <SlidePlan />;
       case 5: return <SlideTechnique />;
       case 6: return <SlideApproach />;
-      case 7: return <SlideDirections />;
-      case 8: return <SlidePractice />;
-      case 9: return <SlideAlgorithm />;
-      case 10: return <SlideQuiz />;
-      case 11: return <SlideReflection />;
+      case 7: return <SlideDir1 />;
+      case 8: return <SlideDir2 />;
+      case 9: return <SlideDir3 />;
+      case 10: return <SlideDir4 />;
+      case 11: return <SlideDir5 />;
+      case 12: return <SlideDir6 />;
+      case 13: return <SlidePractice />;
+      case 14: return <SlideAlgorithm />;
+      case 15: return <SlideQuiz />;
+      case 16: return <SlideReflection />;
       default: return null;
     }
   };

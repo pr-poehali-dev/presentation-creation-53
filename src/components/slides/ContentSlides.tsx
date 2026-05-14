@@ -34,17 +34,22 @@ export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
     { label: "План мероприятия", slide: 4 },
     { label: "Техника Revisée", slide: 5 },
     { label: "Суть подхода", slide: 6 },
-    { label: "Ключевые направления пересмотра", slide: 7 },
-    { label: "Практическая часть", slide: 8 },
-    { label: "Алгоритм приготовления десерта", slide: 9 },
-    { label: "Проверь себя", slide: 10 },
-    { label: "Рефлексия", slide: 11 },
+    { label: "Направления: Деконструкция", slide: 7 },
+    { label: "Направления: Смена текстуры", slide: 8 },
+    { label: "Направления: Форма и порция", slide: 9 },
+    { label: "Направления: Вкусовой профиль", slide: 10 },
+    { label: "Направления: Технологии", slide: 11 },
+    { label: "Направления: Интерактивная подача", slide: 12 },
+    { label: "Практическая часть", slide: 13 },
+    { label: "Алгоритм приготовления десерта", slide: 14 },
+    { label: "Проверь себя", slide: 15 },
+    { label: "Рефлексия", slide: 16 },
   ];
   const [hovered, setHovered] = useState<number | null>(null);
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
       <SlideHeader title="Содержание" subtitle="Нажмите на раздел, чтобы перейти к нему" />
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "16px" }}>
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "7px", marginTop: "14px" }}>
         {items.map((item, i) => {
           const active = hovered === i;
           return (
@@ -227,71 +232,58 @@ export function SlideTechnique() {
   );
 }
 
-export function SlideDirections() {
-  const directions = [
-    {
-      title: "Деконструкция",
-      items: [
-        "Тирамису → эспрессо-икра + пена маскарпоне + бисквитная крошка",
-        "Чизкейк → мусс + карамелизованная основа + ягодный гель",
-      ],
-    },
-    {
-      title: "Смена текстуры",
-      items: [
-        "Молекулярная гастрономия",
-        "Шоколадный торт → эспума + хрустящий диск",
-      ],
-    },
-    {
-      title: "Форма и порция",
-      items: [
-        "Торт → мини-версии в стаканчиках",
-        "Эклер → ролл; Наполеон → мини-тарталетки",
-      ],
-    },
-    {
-      title: "Вкусовой профиль",
-      items: [
-        "Контрастные ноты: соль к карамели, перец к шоколаду",
-        "Сезонность и тренды: веган, безглютеновый, низкосахарный",
-      ],
-    },
-    {
-      title: "Технологии",
-      items: [
-        "Су-вид, шоковая заморозка, 3D-печать декора",
-        "Сферификация и желирование",
-      ],
-    },
-    {
-      title: "Интерактивная подача",
-      items: [
-        "Компоненты отдельно — гость собирает сам",
-        "Сухой лёд, горячий соус, «живые» элементы",
-      ],
-    },
-  ];
+function DirectionSlide({ num, total, title, description, examples, image }: {
+  num: number; total: number; title: string; description: string; examples: { label: string; text: string }[]; image: string;
+}) {
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
-      <SlideHeader title="Ключевые направления пересмотра" />
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gridTemplateRows: "1fr 1fr", gap: "10px", marginTop: "20px" }}>
-        {directions.map((dir, i) => (
-          <div key={i} style={{ border: "1px solid #e8edf4", borderRadius: "2px", padding: "14px 16px", display: "flex", flexDirection: "column", gap: "8px", borderTop: "3px solid #c9a84c" }}>
-            <p style={{ fontFamily: "'Cormorant', serif", fontWeight: 600, fontSize: "16px", color: "#0f1f3d", margin: 0 }}>{dir.title}</p>
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              {dir.items.map((item, j) => (
-                <div key={j} style={{ display: "flex", gap: "7px", alignItems: "flex-start" }}>
-                  <span style={{ color: "#c9a84c", flexShrink: 0, fontSize: "10px", marginTop: "3px" }}>▸</span>
-                  <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10.5px", color: "#4a607f", lineHeight: 1.45 }}>{item}</span>
-                </div>
-              ))}
-            </div>
+      <SlideHeader title="Ключевые направления пересмотра" subtitle={`Направление ${num} из ${total}`} />
+      <div style={{ flex: 1, display: "flex", gap: "32px", marginTop: "22px" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <span style={{ fontFamily: "'Cormorant', serif", fontSize: "42px", fontWeight: 300, color: "#c9a84c", lineHeight: 1 }}>{String(num).padStart(2, "0")}</span>
+            <h3 style={{ fontFamily: "'Cormorant', serif", fontSize: "28px", fontWeight: 600, color: "#0f1f3d", margin: 0 }}>{title}</h3>
           </div>
-        ))}
+          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: "#4a607f", lineHeight: 1.7, borderLeft: "3px solid #e8edf4", paddingLeft: "14px", margin: 0 }}>{description}</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "4px" }}>
+            {examples.map((ex, i) => (
+              <div key={i} style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "2px", padding: "10px 14px" }}>
+                <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", fontWeight: 600, color: "#c9a84c", textTransform: "uppercase", letterSpacing: "0.1em" }}>{ex.label}</span>
+                <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#3d5278", lineHeight: 1.5, margin: "4px 0 0" }}>{ex.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ width: "260px", flexShrink: 0, borderRadius: "2px", overflow: "hidden", border: "1px solid #e8edf4" }}>
+          <img src={image} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
       </div>
     </div>
   );
+}
+
+export function SlideDir1() {
+  return <DirectionSlide num={1} total={6} title="Деконструкция" description="Разбор классического десерта на компоненты с новой подачей — каждый элемент существует отдельно и раскрывается в новом контексте." examples={[{ label: "Тирамису", text: "Эспрессо-икра + пена маскарпоне + бисквитная крошка" }, { label: "Чизкейк", text: "Мусс из творожного сыра + карамелизованная основа + ягодный гель" }]} image="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/309529cc-b7da-496b-aa99-93582cf44534.jpg" />;
+}
+
+export function SlideDir2() {
+  return <DirectionSlide num={2} total={6} title="Смена текстуры" description="Использование технологий молекулярной гастрономии для радикального изменения ощущений при сохранении узнаваемого вкуса." examples={[{ label: "Шоколадный торт", text: "Шоколадное облако (эспума) + хрустящий диск" }, { label: "Принцип", text: "Контраст между воздушным и плотным, нежным и хрустящим" }]} image="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/d6369c87-e38e-4205-9812-2a079b236b82.jpg" />;
+}
+
+export function SlideDir3() {
+  return <DirectionSlide num={3} total={6} title="Изменение формы и порции" description="Переосмысление масштаба и формата подачи — от большого к малому, от единого к многому." examples={[{ label: "Торт → стаканчики", text: "Большой торт трансформируется в мини-версии для индивидуальной подачи" }, { label: "Эклеры / Наполеон", text: "Эклер-ролл (рулет с начинкой); слоёные мини-тарталетки с кремом" }]} image="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/f393300b-f7da-4770-a63a-31b1e827c7b9.jpg" />;
+}
+
+export function SlideDir4() {
+  return <DirectionSlide num={4} total={6} title="Обновление вкусового профиля" description="Добавление неожиданных нот, сезонных ингредиентов и адаптация под актуальные тренды питания." examples={[{ label: "Контраст вкусов", text: "Соль к карамели, перец к шоколаду, цитрус к ванили" }, { label: "Тренды", text: "Веган, безглютеновый, низкосахарный; сезонные ягоды, имбирь, мята" }]} image="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/328a059c-6329-4493-826c-3a89ef22f192.jpg" />;
+}
+
+export function SlideDir5() {
+  return <DirectionSlide num={5} total={6} title="Технологическая модернизация" description="Применение современного оборудования и техник для достижения точности, эффектности и стабильности результата." examples={[{ label: "Оборудование", text: "Су-вид для нежных текстур; шоковая заморозка для сохранения свежести" }, { label: "Инновации", text: "3D-печать сложных декоративных элементов; сферификация и желирование" }]} image="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/617735dc-f3a8-4590-ad6a-2c46cb959c4c.jpg" />;
+}
+
+export function SlideDir6() {
+  return <DirectionSlide num={6} total={6} title="Интерактивная подача" description="Вовлечение гостя в процесс создания десерта — театральность, игра и эффект присутствия." examples={[{ label: "Самосборка", text: "Компоненты подаются отдельно — гость собирает десерт сам" }, { label: "Эффект", text: "Сухой лёд; горячий соус, вызывающий таяние элементов при подаче" }]} image="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/948a33d6-ccd1-4a80-b681-0504fbb9c708.jpg" />;
 }
 
 export function SlideApproach() {
