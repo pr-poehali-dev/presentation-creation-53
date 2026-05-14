@@ -33,16 +33,18 @@ export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
     { label: "Цели и задачи мероприятия", slide: 3 },
     { label: "План мероприятия", slide: 4 },
     { label: "Техника Revisée", slide: 5 },
-    { label: "Практическая часть", slide: 6 },
-    { label: "Алгоритм приготовления десерта", slide: 7 },
-    { label: "Проверь себя", slide: 8 },
-    { label: "Рефлексия", slide: 9 },
+    { label: "Суть подхода", slide: 6 },
+    { label: "Ключевые направления пересмотра", slide: 7 },
+    { label: "Практическая часть", slide: 8 },
+    { label: "Алгоритм приготовления десерта", slide: 9 },
+    { label: "Проверь себя", slide: 10 },
+    { label: "Рефлексия", slide: 11 },
   ];
   const [hovered, setHovered] = useState<number | null>(null);
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
       <SlideHeader title="Содержание" subtitle="Нажмите на раздел, чтобы перейти к нему" />
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginTop: "20px" }}>
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginTop: "16px" }}>
         {items.map((item, i) => {
           const active = hovered === i;
           return (
@@ -52,8 +54,8 @@ export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
               style={{
-                display: "flex", alignItems: "center", gap: "16px",
-                padding: "14px 16px",
+                display: "flex", alignItems: "center", gap: "12px",
+                padding: "10px 14px",
                 border: active ? "1.5px solid #c9a84c" : "1px solid #e8edf4",
                 borderRadius: "4px",
                 background: active ? "linear-gradient(135deg,#fdf5e0,#fef9ec)" : "#fff",
@@ -63,10 +65,10 @@ export function SlideContents({ onGo }: { onGo?: (slide: number) => void }) {
                 transform: active ? "translateY(-1px)" : "none",
               }}
             >
-              <span style={{ fontFamily: "'Cormorant', serif", fontSize: "28px", fontWeight: 300, color: active ? "#c9a84c" : "#c9a84c", opacity: active ? 1 : 0.6, minWidth: "36px", transition: "opacity 0.18s" }}>
+              <span style={{ fontFamily: "'Cormorant', serif", fontSize: "22px", fontWeight: 300, color: "#c9a84c", opacity: active ? 1 : 0.6, minWidth: "30px", transition: "opacity 0.18s" }}>
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: active ? "#7a5a10" : "#1e2d4d", fontWeight: active ? 600 : 500, lineHeight: 1.3, flex: 1, transition: "color 0.18s" }}>
+              <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", color: active ? "#7a5a10" : "#1e2d4d", fontWeight: active ? 600 : 500, lineHeight: 1.3, flex: 1, transition: "color 0.18s" }}>
                 {item.label}
               </span>
               {active && <span style={{ color: "#c9a84c", fontSize: "16px" }}>→</span>}
