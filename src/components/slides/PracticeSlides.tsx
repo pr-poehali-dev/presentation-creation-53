@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import SlideHeader from "@/components/SlideHeader";
+
+const ANSWERS_API = "https://functions.poehali.dev/fe5010b3-d20c-47d9-a488-3e4569b79e07";
 
 const DESSERT_IMAGE = "https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/7c8ec60f-507c-4bbe-a026-a9aaa6698330.jpg";
 
@@ -193,174 +195,115 @@ export function SlideAlgorithm() {
   );
 }
 
-const SEND_REFLECTION_URL = "https://functions.poehali.dev/242ce028-c59a-4b0b-a247-37887edf2b96";
+type Answer = { id: number; name: string; group: string; phrases: { phrase: string; text: string }[]; stars: number };
 
 export function SlideReflection() {
-  const phrases = [
-    { text: "Я узнал, что…", emoji: "💡" },
-    { text: "Было интересно…", emoji: "✨" },
-    { text: "Было трудно…", emoji: "💪" },
-    { text: "Я выполнял задание…", emoji: "📝" },
-    { text: "Я понял, что…", emoji: "🎯" },
-    { text: "Теперь я могу…", emoji: "🚀" },
-    { text: "Я приобрел…", emoji: "🏆" },
-    { text: "Я научился…", emoji: "📚" },
-    { text: "Я смог…", emoji: "⭐" },
-    { text: "Я попробую…", emoji: "🌱" },
-  ];
-  const [selected, setSelected] = useState<number[]>([]);
-  const [activePhrase, setActivePhrase] = useState<number | null>(null);
-  const [texts, setTexts] = useState<Record<number, string>>({});
-  const [stars, setStars] = useState(0);
-  const [hoverStar, setHoverStar] = useState(0);
-  const [name, setName] = useState("");
-  const [group, setGroup] = useState("");
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [error, setError] = useState("");
+  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [lastCount, setLastCount] = useState(0);
+  const [newIds, setNewIds] = useState<Set<number>>(new Set());
+  const reflectionUrl = `${window.location.origin}/reflection`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(reflectionUrl)}`;
 
-  const toggle = (i: number) => {
-    if (selected.includes(i)) {
-      setSelected(prev => prev.filter(x => x !== i));
-      if (activePhrase === i) setActivePhrase(null);
-    } else {
-      setSelected(prev => [...prev, i]);
-      setActivePhrase(i);
-    }
-  };
-
-  const starLabels = ["Плохо", "Удовлетворительно", "Хорошо", "Отлично", "Превосходно"];
-
-  const handleSend = async () => {
-    if (!name.trim()) { setError("Введите имя"); return; }
-    setSending(true);
-    setError("");
+  const fetchAnswers = async () => {
     try {
-      const filledPhrases = selected.map(i => ({ phrase: phrases[i].text, text: texts[i] || "" }));
-      const res = await fetch(SEND_REFLECTION_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), group: group.trim(), stars, phrases: filledPhrases }),
-      });
-      if (res.ok) { setSent(true); }
-      else { setError("Ошибка отправки. Попробуйте ещё раз."); }
-    } catch {
-      setError("Нет соединения. Попробуйте ещё раз.");
-    } finally {
-      setSending(false);
-    }
+      const res = await fetch(ANSWERS_API);
+      const data = await res.json();
+      const list: Answer[] = data.answers || [];
+      if (list.length > lastCount) {
+        const existingIds = new Set(answers.map(a => a.id));
+        const fresh = new Set(list.filter(a => !existingIds.has(a.id)).map(a => a.id));
+        setNewIds(fresh);
+        setTimeout(() => setNewIds(new Set()), 2000);
+      }
+      setLastCount(list.length);
+      setAnswers(list);
+    } catch (e) { /* ignore */ }
   };
+
+  useEffect(() => {
+    fetchAnswers();
+    const interval = setInterval(fetchAnswers, 4000);
+    return () => clearInterval(interval);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleClear = async () => {
+    await fetch(ANSWERS_API, { method: "DELETE" });
+    setAnswers([]);
+    setLastCount(0);
+  };
+
+  const starLabels = ["Плохо", "Удовл.", "Хорошо", "Отлично", "Отлично!"];
+  const avgStars = answers.length ? (answers.reduce((s, a) => s + (a.stars || 0), 0) / answers.length).toFixed(1) : "—";
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "32px 50px", background: "#fff" }}>
-      <SlideHeader title="Рефлексия" subtitle="Выберите фразу, допишите мысль и отправьте преподавателю" />
-      <div style={{ flex: 1, display: "flex", gap: "18px", marginTop: "16px" }}>
-        {/* Phrases grid */}
-        <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7px", alignContent: "start" }}>
-          {phrases.map((p, i) => {
-            const active = selected.includes(i);
-            return (
-              <button
-                key={i}
-                onClick={() => toggle(i)}
-                style={{
-                  display: "flex", gap: "8px", alignItems: "center",
-                  padding: "8px 12px",
-                  border: active ? "2px solid #c9a84c" : "1px solid #e8edf4",
-                  borderRadius: "6px",
-                  background: active ? "linear-gradient(135deg, #fdf5e0, #fef9ec)" : "#fff",
-                  cursor: "pointer", textAlign: "left",
-                  transition: "all 0.2s ease",
-                  transform: active ? "scale(1.02)" : "scale(1)",
-                  boxShadow: active ? "0 3px 10px rgba(201,168,76,0.18)" : "none",
-                }}
-              >
-                <span style={{ fontSize: "16px", flexShrink: 0 }}>{p.emoji}</span>
-                <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: active ? "#7a5a10" : "#3d5278", fontWeight: active ? 600 : 400, flex: 1 }}>{p.text}</span>
-                {active && <Icon name="CheckCircle" size={13} style={{ color: "#c9a84c", flexShrink: 0 }} />}
-              </button>
-            );
-          })}
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "24px 36px", background: "#fff" }}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "14px" }}>
+        <div>
+          <p style={{ color: "#c9a84c", fontSize: "9px", textTransform: "uppercase", letterSpacing: "0.2em", fontFamily: "'IBM Plex Sans', sans-serif", margin: "0 0 4px" }}>Слайд 17</p>
+          <h2 style={{ fontFamily: "'Cormorant', serif", fontSize: "26px", fontWeight: 600, color: "#0f1f3d", margin: 0 }}>Рефлексия</h2>
         </div>
-
-        {/* Right panel */}
-        <div style={{ width: "220px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
-
-          {/* Text input */}
-          <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "6px", padding: "10px", display: "flex", flexDirection: "column", gap: "6px" }}>
-            <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.15em", margin: 0 }}>
-              {activePhrase !== null ? phrases[activePhrase].text : "Выберите фразу слева"}
-            </p>
-            <textarea
-              placeholder={activePhrase !== null ? "Напишите свою мысль…" : ""}
-              value={activePhrase !== null ? (texts[activePhrase] || "") : ""}
-              onChange={e => activePhrase !== null && setTexts(prev => ({ ...prev, [activePhrase]: e.target.value }))}
-              disabled={activePhrase === null}
-              style={{
-                width: "100%", minHeight: "52px", resize: "none",
-                fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#1e2d4d",
-                border: "1px solid #e8edf4", borderRadius: "4px", padding: "6px 8px",
-                background: activePhrase !== null ? "#fff" : "#f0f3f8",
-                outline: "none", lineHeight: 1.5, boxSizing: "border-box",
-              }}
-            />
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ background: "#0f2347", borderRadius: "8px", padding: "8px 14px", display: "flex", gap: "16px", alignItems: "center" }}>
+            <div style={{ textAlign: "center" }}>
+              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", textTransform: "uppercase", margin: "0 0 2px" }}>Ответов</p>
+              <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "22px", fontWeight: 700, margin: 0 }}>{answers.length}</p>
+            </div>
+            <div style={{ width: "1px", height: "30px", background: "rgba(255,255,255,0.1)" }} />
+            <div style={{ textAlign: "center" }}>
+              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", textTransform: "uppercase", margin: "0 0 2px" }}>Оценка</p>
+              <p style={{ color: "#f0c060", fontFamily: "'Cormorant', serif", fontSize: "22px", fontWeight: 700, margin: 0 }}>★ {avgStars}</p>
+            </div>
           </div>
-
-          {/* Stars rating */}
-          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "10px 14px", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
-            <p style={{ color: "#c9a84c", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", fontFamily: "'IBM Plex Sans', sans-serif", margin: 0 }}>Оцените урок</p>
-            <div style={{ display: "flex", gap: "4px" }}>
-              {[1, 2, 3, 4, 5].map(s => (
-                <button key={s} onClick={() => setStars(s)} onMouseEnter={() => setHoverStar(s)} onMouseLeave={() => setHoverStar(0)}
-                  style={{ background: "none", border: "none", cursor: "pointer", padding: "2px", fontSize: "20px", transition: "transform 0.15s", transform: (hoverStar || stars) >= s ? "scale(1.2)" : "scale(1)" }}>
-                  <span style={{ color: (hoverStar || stars) >= s ? "#f0c060" : "#2d4060" }}>★</span>
-                </button>
-              ))}
-            </div>
-            {stars > 0 && <p style={{ color: "#c9a84c", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>{starLabels[stars - 1]}</p>}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
+            <img src={qrUrl} alt="QR" style={{ width: "72px", height: "72px", border: "2px solid #e8edf4", borderRadius: "6px" }} />
+            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "8px", color: "#9aaabe", margin: 0, textAlign: "center" }}>Сканируй</p>
           </div>
-
-          {/* Send form */}
-          {!sent ? (
-            <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "6px", padding: "10px", display: "flex", flexDirection: "column", gap: "7px" }}>
-              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.15em", margin: 0 }}>Отправить преподавателю</p>
-              <input
-                placeholder="Ваше имя *"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                style={{ width: "100%", padding: "6px 8px", borderRadius: "4px", border: "1px solid #e8edf4", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#1e2d4d", outline: "none", boxSizing: "border-box", background: "#fff" }}
-              />
-              <input
-                placeholder="Группа"
-                value={group}
-                onChange={e => setGroup(e.target.value)}
-                style={{ width: "100%", padding: "6px 8px", borderRadius: "4px", border: "1px solid #e8edf4", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#1e2d4d", outline: "none", boxSizing: "border-box", background: "#fff" }}
-              />
-              {error && <p style={{ color: "#e05c5c", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>{error}</p>}
-              <button
-                onClick={handleSend}
-                disabled={sending}
-                style={{
-                  width: "100%", padding: "8px", borderRadius: "4px",
-                  background: sending ? "#e8edf4" : "linear-gradient(135deg,#c9a84c,#e8c96a)",
-                  border: "none", cursor: sending ? "not-allowed" : "pointer",
-                  fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", fontWeight: 600,
-                  color: sending ? "#9aaabe" : "#0f2347",
-                  transition: "all 0.2s",
-                }}
-              >
-                {sending ? "Отправляю…" : "Отправить →"}
-              </button>
-            </div>
-          ) : (
-            <div style={{ background: "linear-gradient(135deg,#0f2347,#1a3566)", borderRadius: "6px", padding: "14px", textAlign: "center", display: "flex", flexDirection: "column", gap: "6px", alignItems: "center" }}>
-              <span style={{ fontSize: "28px" }}>✅</span>
-              <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontStyle: "italic", fontSize: "16px", margin: 0 }}>Отправлено!</p>
-              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Спасибо за участие</p>
-            </div>
+          {answers.length > 0 && (
+            <button onClick={handleClear} style={{ background: "none", border: "1px solid #fca5a5", borderRadius: "6px", padding: "4px 8px", cursor: "pointer", color: "#ef4444", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px" }}>
+              Очистить
+            </button>
           )}
         </div>
       </div>
+
+      {answers.length === 0 ? (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px" }}>
+          <div style={{ width: "60px", height: "60px", border: "2px dashed #e8edf4", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <Icon name="Users" size={24} style={{ color: "#c5d0de" }} />
+          </div>
+          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "13px", color: "#9aaabe", margin: 0 }}>Ожидаем ответы студентов…</p>
+          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#c5d0de", margin: 0 }}>Студенты сканируют QR-код и отвечают с телефона</p>
+        </div>
+      ) : (
+        <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: "8px", overflowY: "auto", alignContent: "start" }}>
+          {answers.map(a => (
+            <div key={a.id} style={{
+              border: newIds.has(a.id) ? "1.5px solid #c9a84c" : "1px solid #e8edf4",
+              borderRadius: "8px", padding: "10px 12px",
+              background: newIds.has(a.id) ? "linear-gradient(135deg,#fdf5e0,#fef9ec)" : "#fff",
+              transition: "all 0.4s ease",
+              boxShadow: newIds.has(a.id) ? "0 4px 14px rgba(201,168,76,0.2)" : "none",
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+                <div>
+                  <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600, fontSize: "11px", color: "#0f1f3d", margin: 0 }}>{a.name}</p>
+                  {a.group && <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", color: "#9aaabe", margin: "2px 0 0" }}>{a.group}</p>}
+                </div>
+                {a.stars > 0 && (
+                  <span style={{ fontSize: "11px", color: "#f0c060" }}>{"★".repeat(a.stars)}</span>
+                )}
+              </div>
+              {a.phrases?.filter(p => p.text).map((p, i) => (
+                <div key={i} style={{ marginTop: "4px" }}>
+                  <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", color: "#c9a84c", margin: "0 0 1px", fontWeight: 600 }}>{p.phrase}</p>
+                  <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#4a607f", margin: 0, lineHeight: 1.4 }}>{p.text}</p>
+                </div>
+              ))}
+              {a.stars > 0 && <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", color: "#9aaabe", margin: "6px 0 0" }}>{starLabels[a.stars - 1]}</p>}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
