@@ -1,0 +1,27 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Send reflection email",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "name": "Иванова Мария",
+        "group": "ТК-21",
+        "stars": 5,
+        "phrases": [
+          {"phrase": "Я понял, что…", "text": "деконструкция десертов — это искусство"},
+          {"phrase": "Теперь я могу…", "text": "применять молекулярные техники"}
+        ]
+      },
+      "expectedStatus": 200,
+      "expectedBody": {"ok": true},
+      "bodyMatcher": "partial"
+    }
+  ]
+}

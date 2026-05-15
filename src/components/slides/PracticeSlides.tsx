@@ -193,6 +193,8 @@ export function SlideAlgorithm() {
   );
 }
 
+const SEND_REFLECTION_URL = "https://functions.poehali.dev/242ce028-c59a-4b0b-a247-37887edf2b96";
+
 export function SlideReflection() {
   const phrases = [
     { text: "Я узнал, что…", emoji: "💡" },
@@ -211,6 +213,11 @@ export function SlideReflection() {
   const [texts, setTexts] = useState<Record<number, string>>({});
   const [stars, setStars] = useState(0);
   const [hoverStar, setHoverStar] = useState(0);
+  const [name, setName] = useState("");
+  const [group, setGroup] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
 
   const toggle = (i: number) => {
     if (selected.includes(i)) {
@@ -224,9 +231,29 @@ export function SlideReflection() {
 
   const starLabels = ["Плохо", "Удовлетворительно", "Хорошо", "Отлично", "Превосходно"];
 
+  const handleSend = async () => {
+    if (!name.trim()) { setError("Введите имя"); return; }
+    setSending(true);
+    setError("");
+    try {
+      const filledPhrases = selected.map(i => ({ phrase: phrases[i].text, text: texts[i] || "" }));
+      const res = await fetch(SEND_REFLECTION_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name.trim(), group: group.trim(), stars, phrases: filledPhrases }),
+      });
+      if (res.ok) { setSent(true); }
+      else { setError("Ошибка отправки. Попробуйте ещё раз."); }
+    } catch {
+      setError("Нет соединения. Попробуйте ещё раз.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "32px 50px", background: "#fff" }}>
-      <SlideHeader title="Рефлексия" subtitle="Выберите фразу и допишите свою мысль" />
+      <SlideHeader title="Рефлексия" subtitle="Выберите фразу, допишите мысль и отправьте преподавателю" />
       <div style={{ flex: 1, display: "flex", gap: "18px", marginTop: "16px" }}>
         {/* Phrases grid */}
         <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7px", alignContent: "start" }}>
@@ -257,10 +284,10 @@ export function SlideReflection() {
         </div>
 
         {/* Right panel */}
-        <div style={{ width: "210px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div style={{ width: "220px", flexShrink: 0, display: "flex", flexDirection: "column", gap: "10px" }}>
 
           {/* Text input */}
-          <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "6px", padding: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+          <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "6px", padding: "10px", display: "flex", flexDirection: "column", gap: "6px" }}>
             <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.15em", margin: 0 }}>
               {activePhrase !== null ? phrases[activePhrase].text : "Выберите фразу слева"}
             </p>
@@ -270,9 +297,9 @@ export function SlideReflection() {
               onChange={e => activePhrase !== null && setTexts(prev => ({ ...prev, [activePhrase]: e.target.value }))}
               disabled={activePhrase === null}
               style={{
-                width: "100%", minHeight: "60px", resize: "none",
+                width: "100%", minHeight: "52px", resize: "none",
                 fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#1e2d4d",
-                border: "1px solid #e8edf4", borderRadius: "4px", padding: "8px",
+                border: "1px solid #e8edf4", borderRadius: "4px", padding: "6px 8px",
                 background: activePhrase !== null ? "#fff" : "#f0f3f8",
                 outline: "none", lineHeight: 1.5, boxSizing: "border-box",
               }}
@@ -280,7 +307,7 @@ export function SlideReflection() {
           </div>
 
           {/* Stars rating */}
-          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "14px", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "10px 14px", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
             <p style={{ color: "#c9a84c", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.2em", fontFamily: "'IBM Plex Sans', sans-serif", margin: 0 }}>Оцените урок</p>
             <div style={{ display: "flex", gap: "4px" }}>
               {[1, 2, 3, 4, 5].map(s => (
@@ -290,32 +317,48 @@ export function SlideReflection() {
                 </button>
               ))}
             </div>
-            {stars > 0 && (
-              <p style={{ color: "#c9a84c", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>{starLabels[stars - 1]}</p>
-            )}
+            {stars > 0 && <p style={{ color: "#c9a84c", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>{starLabels[stars - 1]}</p>}
           </div>
 
-          {/* Progress */}
-          <div style={{ background: "#0f2347", borderRadius: "6px", padding: "12px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "6px" }}>
-              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Активность</p>
-              <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontSize: "18px", fontWeight: 700, margin: 0 }}>
-                {Math.round((selected.length / phrases.length) * 100)}%
-              </p>
+          {/* Send form */}
+          {!sent ? (
+            <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "6px", padding: "10px", display: "flex", flexDirection: "column", gap: "7px" }}>
+              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.15em", margin: 0 }}>Отправить преподавателю</p>
+              <input
+                placeholder="Ваше имя *"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                style={{ width: "100%", padding: "6px 8px", borderRadius: "4px", border: "1px solid #e8edf4", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#1e2d4d", outline: "none", boxSizing: "border-box", background: "#fff" }}
+              />
+              <input
+                placeholder="Группа"
+                value={group}
+                onChange={e => setGroup(e.target.value)}
+                style={{ width: "100%", padding: "6px 8px", borderRadius: "4px", border: "1px solid #e8edf4", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#1e2d4d", outline: "none", boxSizing: "border-box", background: "#fff" }}
+              />
+              {error && <p style={{ color: "#e05c5c", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>{error}</p>}
+              <button
+                onClick={handleSend}
+                disabled={sending}
+                style={{
+                  width: "100%", padding: "8px", borderRadius: "4px",
+                  background: sending ? "#e8edf4" : "linear-gradient(135deg,#c9a84c,#e8c96a)",
+                  border: "none", cursor: sending ? "not-allowed" : "pointer",
+                  fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", fontWeight: 600,
+                  color: sending ? "#9aaabe" : "#0f2347",
+                  transition: "all 0.2s",
+                }}
+              >
+                {sending ? "Отправляю…" : "Отправить →"}
+              </button>
             </div>
-            <div style={{ height: "5px", background: "rgba(255,255,255,0.08)", borderRadius: "3px", overflow: "hidden" }}>
-              <div style={{ height: "100%", width: `${(selected.length / phrases.length) * 100}%`, background: selected.length === phrases.length ? "linear-gradient(90deg,#c9a84c,#f0c060)" : "#c9a84c", borderRadius: "3px", transition: "width 0.4s ease" }} />
+          ) : (
+            <div style={{ background: "linear-gradient(135deg,#0f2347,#1a3566)", borderRadius: "6px", padding: "14px", textAlign: "center", display: "flex", flexDirection: "column", gap: "6px", alignItems: "center" }}>
+              <span style={{ fontSize: "28px" }}>✅</span>
+              <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontStyle: "italic", fontSize: "16px", margin: 0 }}>Отправлено!</p>
+              <p style={{ color: "#9aaabe", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: 0 }}>Спасибо за участие</p>
             </div>
-            <p style={{ color: "#64748b", fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", margin: "6px 0 0", textAlign: "center" }}>
-              {selected.length === 0 && "нажмите на фразу"}
-              {selected.length > 0 && selected.length < phrases.length && `${selected.length} из ${phrases.length} фраз`}
-              {selected.length === phrases.length && "все фразы! 🎉"}
-            </p>
-          </div>
-
-          <div style={{ border: "1px solid #c9a84c", borderRadius: "6px", padding: "8px", textAlign: "center" }}>
-            <p style={{ color: "#c9a84c", fontFamily: "'Cormorant', serif", fontStyle: "italic", fontSize: "14px", margin: 0 }}>«Спасибо за участие!»</p>
-          </div>
+          )}
         </div>
       </div>
     </div>
