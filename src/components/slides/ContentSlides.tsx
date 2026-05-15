@@ -143,8 +143,8 @@ export function SlideGoals() {
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
           <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#9aaabe", textTransform: "uppercase", letterSpacing: "0.15em" }}>Задача</p>
-          <div style={{ padding: "14px 16px", border: "1px solid #e8edf4", borderRadius: "2px" }}>
-            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#4a607f", lineHeight: 1.6, margin: 0 }}>Приготовить десерт и продемонстрировать основные умения в оформлении и подаче десерта.</p>
+          <div style={{ padding: "14px 16px", borderLeft: "3px solid #c9a84c", background: "linear-gradient(135deg,#fdf5e0,#fef9ec)", borderRadius: "2px" }}>
+            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", fontWeight: 600, color: "#7a5a10", lineHeight: 1.6, margin: 0 }}>Приготовить десерт и продемонстрировать основные умения в оформлении и подаче десерта.</p>
           </div>
           <div style={{ flex: 1, borderRadius: "2px", overflow: "hidden", border: "1px solid #e8edf4", minHeight: "140px" }}>
             <img src="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/326fd86f-ca85-48ae-88ee-a41123f17d8b.jpg" alt="Кондитер" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
