@@ -142,7 +142,7 @@ export function SlideGoals() {
           </div>
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
-          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#9aaabe", textTransform: "uppercase", letterSpacing: "0.15em" }}>Задача</p>
+          <p style={{ fontFamily: "'Cormorant', serif", fontSize: "22px", fontWeight: 700, color: "#0f2347", letterSpacing: "0.05em", margin: 0 }}>Задача</p>
           <div style={{ padding: "14px 16px", borderLeft: "3px solid #c9a84c", background: "linear-gradient(135deg,#fdf5e0,#fef9ec)", borderRadius: "2px" }}>
             <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "12px", fontWeight: 600, color: "#7a5a10", lineHeight: 1.6, margin: 0 }}>Приготовить десерт и продемонстрировать основные умения в оформлении и подаче десерта.</p>
           </div>
