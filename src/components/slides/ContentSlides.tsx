@@ -136,7 +136,7 @@ export function SlideGoals() {
           <div style={{ background: "#0f2347", borderRadius: "2px", padding: "24px", height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
             <div>
               <p style={{ color: "#c9a84c", fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.25em", fontFamily: "'IBM Plex Sans', sans-serif", marginBottom: "16px" }}>Цель мероприятия</p>
-              <p style={{ color: "#ffffff", fontFamily: "'Cormorant', serif", fontSize: "20px", fontWeight: 300, lineHeight: 1.4, fontStyle: "italic" }}>«Изучение современных видов оформления и подачи десертов»</p>
+              <p style={{ color: "#ffffff", fontFamily: "'Cormorant', serif", fontSize: "20px", fontWeight: 300, lineHeight: 1.4, fontStyle: "italic" }}>«Закрепить полученные ранее знания и познакомиться с современными тенденциями в кондитерском деле, которые можно будет применять на практике»</p>
             </div>
             <div style={{ width: "48px", height: "1px", background: "#c9a84c", opacity: 0.5, marginTop: "16px" }} />
           </div>
@@ -144,9 +144,7 @@ export function SlideGoals() {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
           <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#9aaabe", textTransform: "uppercase", letterSpacing: "0.15em" }}>Задачи</p>
           {[
-            { label: "Обучающая", text: "Расширить знания участников в оформлении и подаче десертов. Развить основные умения и творческий потенциал." },
-            { label: "Развивающая", text: "Способствовать развитию мыслительной деятельности и творческих способностей обучающихся." },
-            { label: "Воспитательная", text: "Воспитывать понимание социальной значимости профессии и умение работать в коллективе." }
+            { label: "Задача", text: "Приготовить десерт и продемонстрировать основные умения в оформлении и подаче десерта." },
           ].map((task) => (
             <div key={task.label} style={{ display: "flex", gap: "12px", padding: "14px 16px", border: "1px solid #e8edf4", borderRadius: "2px" }}>
               <div>
