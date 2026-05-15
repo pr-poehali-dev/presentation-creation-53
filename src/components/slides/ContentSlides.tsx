@@ -142,17 +142,13 @@ export function SlideGoals() {
           </div>
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}>
-          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#9aaabe", textTransform: "uppercase", letterSpacing: "0.15em" }}>Задачи</p>
-          {[
-            { label: "Задача", text: "Приготовить десерт и продемонстрировать основные умения в оформлении и подаче десерта." },
-          ].map((task) => (
-            <div key={task.label} style={{ display: "flex", gap: "12px", padding: "14px 16px", border: "1px solid #e8edf4", borderRadius: "2px" }}>
-              <div>
-                <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600, fontSize: "10px", textTransform: "uppercase", letterSpacing: "0.1em", color: "#0f1f3d", marginBottom: "4px" }}>{task.label}</p>
-                <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#4a607f", lineHeight: 1.6 }}>{task.text}</p>
-              </div>
-            </div>
-          ))}
+          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#9aaabe", textTransform: "uppercase", letterSpacing: "0.15em" }}>Задача</p>
+          <div style={{ padding: "14px 16px", border: "1px solid #e8edf4", borderRadius: "2px" }}>
+            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#4a607f", lineHeight: 1.6, margin: 0 }}>Приготовить десерт и продемонстрировать основные умения в оформлении и подаче десерта.</p>
+          </div>
+          <div style={{ flex: 1, borderRadius: "2px", overflow: "hidden", border: "1px solid #e8edf4", minHeight: "140px" }}>
+            <img src="https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/326fd86f-ca85-48ae-88ee-a41123f17d8b.jpg" alt="Кондитер" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          </div>
         </div>
       </div>
     </div>
