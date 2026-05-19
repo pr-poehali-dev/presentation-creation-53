@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 import SlideHeader from "@/components/SlideHeader";
+import { QRCodeSVG } from "qrcode.react";
 
 const ANSWERS_API = "https://functions.poehali.dev/fe5010b3-d20c-47d9-a488-3e4569b79e07";
 
@@ -202,7 +203,6 @@ export function SlideReflection() {
   const [lastCount, setLastCount] = useState(0);
   const [newIds, setNewIds] = useState<Set<number>>(new Set());
   const reflectionUrl = `${window.location.origin}/reflection`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(reflectionUrl)}`;
 
   const fetchAnswers = async () => {
     try {
@@ -255,7 +255,7 @@ export function SlideReflection() {
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-            <img src={qrUrl} alt="QR" style={{ width: "72px", height: "72px", border: "2px solid #e8edf4", borderRadius: "6px" }} />
+            <QRCodeSVG value={reflectionUrl} size={72} style={{ border: "2px solid #e8edf4", borderRadius: "6px", display: "block" }} />
             <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "8px", color: "#9aaabe", margin: 0, textAlign: "center" }}>Сканируй</p>
           </div>
           {answers.length > 0 && (
