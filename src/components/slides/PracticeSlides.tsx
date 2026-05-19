@@ -255,7 +255,9 @@ export function SlideReflection() {
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
-            <QRCodeSVG value={reflectionUrl} size={72} style={{ border: "2px solid #e8edf4", borderRadius: "6px", display: "block" }} />
+            <div style={{ background: "#c9a84c", padding: "8px", borderRadius: "8px", display: "inline-block" }}>
+              <QRCodeSVG value={reflectionUrl} size={100} fgColor="#0f2347" bgColor="#c9a84c" />
+            </div>
             <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "8px", color: "#9aaabe", margin: 0, textAlign: "center" }}>Сканируй</p>
           </div>
           {answers.length > 0 && (
