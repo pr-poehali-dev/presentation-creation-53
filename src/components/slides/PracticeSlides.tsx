@@ -113,6 +113,9 @@ export function SlideQuiz() {
   );
 }
 
+const IMG_KARTOSHKA = "https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/714dc168-c133-4b26-8408-4c127fa9cee7.jpg";
+const IMG_STAKAN = "https://cdn.poehali.dev/projects/436630c1-5a0c-4fc7-95ee-2c5bd439a41a/files/9832e119-e9d8-4cd7-bec4-3dfc586a47eb.jpg";
+
 export function SlidePractice() {
   const themes = [
     { emoji: "🌸", title: "8 марта", desc: "Весенние мотивы, нежные цвета, цветочные элементы" },
@@ -120,33 +123,55 @@ export function SlidePractice() {
     { emoji: "🎂", title: "День рождения", desc: "Праздничное оформление, яркие декоративные элементы" },
   ];
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "40px 60px", background: "#fff" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", padding: "32px 50px", background: "#fff" }}>
       <SlideHeader title="Практическая часть" subtitle="Десерт в стаканчике — групповая работа" />
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "16px", marginTop: "24px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-          {themes.map((t) => (
-            <div key={t.title} style={{ border: "1px solid #e8edf4", borderRadius: "2px", padding: "20px", textAlign: "center" }}>
-              <div style={{ fontSize: "36px", marginBottom: "10px" }}>{t.emoji}</div>
-              <p style={{ fontFamily: "'Cormorant', serif", fontWeight: 600, fontSize: "20px", color: "#0f1f3d", margin: "0 0 8px" }}>{t.title}</p>
-              <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#6b82a0", lineHeight: 1.5 }}>{t.desc}</p>
+      <div style={{ flex: 1, display: "flex", gap: "24px", marginTop: "18px" }}>
+
+        {/* Левая колонка — фото */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "220px", flexShrink: 0 }}>
+          <div style={{ flex: 1, borderRadius: "4px", overflow: "hidden", border: "1px solid #e8edf4", position: "relative" }}>
+            <img src={IMG_KARTOSHKA} alt="Пирожное Картошка" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(15,31,61,0.75))", padding: "10px 10px 8px" }}>
+              <p style={{ fontFamily: "'Cormorant', serif", fontSize: "13px", fontWeight: 600, color: "#fff", margin: 0 }}>Пирожное «Картошка»</p>
+              <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", color: "#c9a84c", margin: "2px 0 0" }}>Стандартный рецепт</p>
             </div>
-          ))}
+          </div>
+          <div style={{ flex: 1, borderRadius: "4px", overflow: "hidden", border: "1px solid #e8edf4", position: "relative" }}>
+            <img src={IMG_STAKAN} alt="Десерт в стакане" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "linear-gradient(transparent, rgba(15,31,61,0.75))", padding: "10px 10px 8px" }}>
+              <p style={{ fontFamily: "'Cormorant', serif", fontSize: "13px", fontWeight: 600, color: "#fff", margin: 0 }}>Десерт в стакане</p>
+              <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", color: "#c9a84c", margin: "2px 0 0" }}>Современная подача</p>
+            </div>
+          </div>
         </div>
-        <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "2px", padding: "16px" }}>
-          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#c9a84c", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: "12px" }}>Раздаточный материал</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "10px" }}>
-            {["Одноразовые стаканчики", "Бисквитный полуфабрикат", "Ягодная начинка", "Кондитерские мешки с кремом"].map((m, i) => (
-              <div key={i} style={{ display: "flex", gap: "6px", alignItems: "flex-start" }}>
-                <Icon name="CheckCircle" size={13} style={{ color: "#c9a84c", flexShrink: 0, marginTop: "1px" }} />
-                <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#3d5278" }}>{m}</span>
+
+        {/* Правая колонка — контент */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
+            {themes.map((t) => (
+              <div key={t.title} style={{ border: "1px solid #e8edf4", borderRadius: "2px", padding: "14px", textAlign: "center" }}>
+                <div style={{ fontSize: "28px", marginBottom: "6px" }}>{t.emoji}</div>
+                <p style={{ fontFamily: "'Cormorant', serif", fontWeight: 600, fontSize: "16px", color: "#0f1f3d", margin: "0 0 5px" }}>{t.title}</p>
+                <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "10px", color: "#6b82a0", lineHeight: 1.5, margin: 0 }}>{t.desc}</p>
               </div>
             ))}
           </div>
-        </div>
-        <div style={{ border: "1px dashed #c5d0de", borderRadius: "2px", padding: "12px", textAlign: "center" }}>
-          <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#6b82a0", margin: 0 }}>
-            Участники делятся на группы по <strong style={{ color: "#0f1f3d" }}>3–4 человека</strong> и работают под руководством преподавателей
-          </p>
+          <div style={{ background: "#f7f9fc", border: "1px solid #e8edf4", borderRadius: "2px", padding: "12px" }}>
+            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "9px", color: "#c9a84c", textTransform: "uppercase", letterSpacing: "0.2em", marginBottom: "10px", margin: "0 0 10px" }}>Раздаточный материал</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "7px" }}>
+              {["Одноразовые стаканчики", "Бисквитный полуфабрикат", "Ягодная начинка", "Кондитерские мешки с кремом"].map((m, i) => (
+                <div key={i} style={{ display: "flex", gap: "6px", alignItems: "flex-start" }}>
+                  <Icon name="CheckCircle" size={12} style={{ color: "#c9a84c", flexShrink: 0, marginTop: "1px" }} />
+                  <span style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#3d5278" }}>{m}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div style={{ border: "1px dashed #c5d0de", borderRadius: "2px", padding: "10px", textAlign: "center" }}>
+            <p style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontSize: "11px", color: "#6b82a0", margin: 0 }}>
+              Участники делятся на группы по <strong style={{ color: "#0f1f3d" }}>3–4 человека</strong> и работают под руководством преподавателей
+            </p>
+          </div>
         </div>
       </div>
     </div>
